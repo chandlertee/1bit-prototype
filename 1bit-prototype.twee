@@ -1,0 +1,16 @@
+:: StoryTitle
+1bit-prototype
+
+
+:: StoryData
+{
+  "ifid": "F353AF66-53F5-425C-9D26-0901C56A2BB3",
+  "format": "SugarCube",
+  "format-version": "2.37.3",
+  "start": "Start",
+  "zoom": 1
+}
+
+
+:: Start {"position":"100,100","size":"100,100"}
+Hello, world!
