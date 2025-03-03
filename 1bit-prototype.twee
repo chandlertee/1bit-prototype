@@ -14,3 +14,145 @@
 
 :: Start {"position":"100,100","size":"100,100"}
 Hello, world!
+
+
+:: StoryStylesheet [stylesheet]
+:root {
+  --dark: #222323;
+  --light: #f0f6f0;
+
+  /* Default Theme */
+  --bg-color: var(--dark);
+  --text-color: var(--light);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: var(--light);
+    --text-color: var(--dark);
+  }
+}
+
+body {
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  font-family: monospace;
+}
+
+
+/* UI Bar */
+#ui-bar {
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border-right: 1px solid var(--text-color);
+}
+#ui-bar-tray button {
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    border: 1px solid var(--text-color);
+}
+#ui-bar-tray button:not(:disabled):hover {
+    background-color: var(--text-color);
+    border-color: var(--bg-color);
+  	color: var(--bg-color);
+}
+#ui-bar-tray button:disabled {
+    color: var(--text-color);
+    border-color: var(--text-color);
+  	opacity: 20%;
+}
+#menu ul {
+    margin: 1em 0 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--text-color);
+}
+#menu li a {
+    color: var(--text-color);
+    text-transform: uppercase;
+}
+#menu li a:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border-color: var(--bg-color);
+}
+#menu li:not(:first-child) {
+    border-top: 1px solid var(--text-color);
+}
+
+
+/* UI Dialog */
+#ui-dialog-titlebar {
+    background-color: var(--bg-color);
+}
+#ui-dialog-body {
+    background-color: var(--bg-color);
+    border: 1px solid var(--text-color);
+}
+#ui-dialog-body.saves>h2 {
+    background-color: var(--bg-color);
+}
+#ui-dialog-body.saves>:not(:first-child) {
+    border-top: 1px solid var(--text-color);
+}
+#ui-dialog-body.saves .empty {
+    color: var(--text-color);
+}
+#ui-dialog-body.saves #saves-list button {
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+}
+#ui-dialog-body.saves #saves-list button:not(:disabled):hover {
+    background-color: var(--text-color);
+    border-color: var(--bg-color);
+  	color: var(--bg-color);
+}
+#saves-list tr {
+	border: 1px solid var(--text-color);
+}
+#ui-dialog-close {
+    color: var(--text-color);
+}
+#ui-dialog-close:hover {
+    background-color: var(--text-color);
+    border-color: var(--text-color);
+  	color: var(--bg-color);
+}
+#ui-dialog-body.saves #saves-list button.delete:not(:disabled), #ui-dialog-body.saves button[id=saves-clear]:not(:disabled) {
+    background-color: var(--bg-color);
+    border-color: var(--text-color);
+}
+#ui-dialog-body.saves #saves-list button.delete:not(:disabled):hover, #ui-dialog-body.saves button[id=saves-clear]:not(:disabled):hover {
+    background-color: var(--text-color);
+    border-color: var(--bg-color);
+}
+#ui-dialog-body.saves #saves-list button:disabled {
+    color: var(--text-color);
+    border-color: var(--text-color);
+  	opacity: 20%;
+}
+#ui-dialog-body.saves #saves-list button.load:not(:disabled) {
+    background-color: var(--bg-color);
+    border-color: var(--text-color);
+}
+#ui-dialog-body.saves #saves-list button.load:not(:disabled):hover {
+    background-color: var(--text-color);
+    border-color: var(--bg-color);
+}
+
+
+button {
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    border: 1px solid var(--text-color);
+}
+button:disabled {
+    background-color: var(--bg-color);
+    border: 1px solid var(--text-color);
+  	opacity: 20%;
+}
+button:not(:disabled):hover {
+    color: var(--bg-color);
+    background-color: var(--text-color);
+    border: 1px solid var(--bg-color);
+}
