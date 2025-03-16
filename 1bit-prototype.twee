@@ -8,13 +8,113 @@
   "format": "SugarCube",
   "format-version": "2.37.3",
   "start": "Start",
+  "tag-colors": {
+    "widget": "purple"
+  },
   "zoom": 1
 }
 
 
-:: Start {"position":"100,100","size":"100,100"}
+:: Health System {"position":"300,300","size":"100,100"}
+<<set $health to 100>>
+<label for="health">Health:</label> <meter id="healthMeter" @value="$health"  min="0"  max="100" title="Health">$health</meter> <span id="healthValue">$health</span> / 100
+
+Hi there. Sorry, but in order to demonstrate the Health system. You'll need to take some damage.
+
+<<link 'Take 10 Damage'>>
+	<<updateMeter 'health' '-=' 10>>
+<</link>>
+<<link 'Heal 10 Damage'>>
+	<<updateMeter 'health' '+=' 10>>
+<</link>>
+
+
+:: Start {"position":"300,100","size":"100,100"}
 Hello, world!
 
+
+:: StoryInit {"position":"100,100","size":"100,100"}
+<<set $health to 100>>
+
+
+:: StoryMenu {"position":"100,300","size":"100,100"}
+[[Health System]] 
+[[War]]
+
+
+
+:: War {"position":"300,400","size":"100,100"}
+<<set $health to 100>>
+<<set $enemyHealth to 100>>
+<label for="health">Health:</label> <meter id="healthMeter" @value="$health"  min="0"  max="100" title="Health">$health</meter> <span id="healthValue">$health</span> / 100
+<label for="enemyHealth">Enemy Health:</label> <meter id="enemyHealthMeter" @value="$enemyHealth"  min="0"  max="100" title="Enemy Health">$enemyHealth</meter> <span id="enemyHealthValue">$enemyHealth</span> / 100
+
+You will roll a d6. The enemy will roll a d4. You must roll higher than the enemy to hit, else you will be hit. 
+
+<<link "Roll">>
+	<<set $playerRoll to random(1,6)>>
+  	<<set $enemyRoll to random(1,4)>>
+    <<if $playerRoll gt $enemyRoll>>
+    	<<set $result to "Success! You hit the enemy!">>
+        <<updateMeter 'enemyHealth' '-=' 10>>
+    <<else>>
+    	<<set $result to "Ouch! You were hit by the enemy!">>
+        <<updateMeter 'health' '-=' 10>>
+    <</if>>
+    
+	<<replace "#playerRoll">>You rolled a $playerRoll<</replace>>
+    <<replace "#enemyRoll">>The enemy rolled a $enemyRoll<</replace>>
+    <<replace "#result">>$result<</replace>>
+<</link>>
+
+<span id="playerRoll"></span>
+<span id="enemyRoll"></span>
+<span id="result"></span>
+
+
+:: StoryScript [script]
+Macro.add("updateMeter", {
+    handler: function () {
+        let varName = this.args[0];
+        let operator = this.args[1];
+        let amount = Number(this.args[2]);
+
+        let currentValue = State.getVar("$" + varName);
+        let newValue;
+
+        switch(operator) {
+            case "+=": newValue = currentValue + amount; break;
+            case "-=": newValue = currentValue - amount; break;
+            default: newValue = amount; break;
+        }
+
+        newValue = Math.clamp(newValue, 0, 100);
+        State.setVar("$" + varName, newValue);
+
+        let meter = document.getElementById(varName + "Meter");
+        let label = document.getElementById(varName + "Value");
+
+        if (meter && label) {
+            clearInterval(meter._interval);
+
+            meter._interval = setInterval(() => {
+                let meterValue = parseFloat(meter.value);
+                if (Math.abs(meterValue - newValue) < 1) {
+                    meter.value = newValue;
+                    label.textContent = Math.round(newValue);
+
+                    meter.classList.toggle("low", newValue <= 30 && newValue > 10);
+                    meter.classList.toggle("critical", newValue <= 10);
+
+                    clearInterval(meter._interval);
+                } else {
+                    meter.value = meterValue + (newValue - meterValue) * 0.2;
+                    label.textContent = Math.round(meter.value);
+                }
+            }, 20);
+        }
+    }
+});
 
 :: StoryStylesheet [stylesheet]
 :root {
@@ -140,7 +240,6 @@ body {
     border-color: var(--bg-color);
 }
 
-
 button {
     color: var(--text-color);
     background-color: var(--bg-color);
@@ -156,3 +255,36 @@ button:not(:disabled):hover {
     background-color: var(--text-color);
     border: 1px solid var(--bg-color);
 }
+
+/* Meter Bar */
+meter {
+  height: 1.25rem;
+  background-color: var(--bg-color);
+  border: 2px double var(--text-color);
+}
+\::-moz-meter-bar {
+  height: 1rem;
+  background-color: var(--bg-color);
+}
+\::-webkit-meter-bar {
+  height: 1rem;
+  background: var(--bg-color);
+}
+\::-webkit-meter-optimum-value {
+  background: var(--text-color);
+}
+\::-webkit-meter-suboptimum-value {
+  background: var(--text-color);
+}
+
+/* Links */
+a, a:active, a:hover, a:visited {
+	color: var(--text-color);
+  	text-decoration: none;
+  	border-bottom: 1px dashed var(--text-color);
+  	
+}
+a:hover {
+  border-bottom: 1px solid var(--text-color);
+}
+
